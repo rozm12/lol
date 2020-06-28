@@ -1,0 +1,209 @@
+-- Made by Sans
+   wait()
+    for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+    if v.Name == "RockAccessorye" then v.Parent = workspace
+        v.Handle.SpecialMesh:Destroy()
+        v.Handle.Transparency = 0
+        v.Handle.CanCollide = true
+    end
+    end
+    
+    wait(1)
+    
+local Plr = game:GetService("Players").LocalPlayer
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://"
+local k = Plr.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+
+
+
+
+local unanchoredparts = {}
+local movers = {}
+local tog = true
+local move = false
+local Player = game:GetService("Players").LocalPlayer
+local Character = Player.Character
+local mov = {};
+local mov2 = {};
+
+
+
+
+local Hats = {
+    gun = Character:WaitForChild("Meshes/NoobShoulderAccessory"),
+             
+}
+
+
+
+Hats.gun.Handle.AccessoryWeld:Remove()
+
+
+
+local Network = coroutine.create(function()
+while true do
+game:GetService("RunService").Heartbeat:Wait()
+settings().Physics.AllowSleep = false
+game:GetService("Players").LocalPlayer.MaximumSimulationRadius = math.pow(math.huge,math.huge)*math.huge
+game:GetService("Players").LocalPlayer.SimulationRadius = math.pow(math.huge,math.huge)*math.huge
+end
+end)
+coroutine.resume(Network)
+
+
+Character.Head.Transparency = 0
+Character.Torso.Transparency = 0
+Character["Right Arm"].Transparency = 0
+Character["Left Arm"].Transparency = 0
+Character["Right Leg"].Transparency = 0
+Character["Left Leg"].Transparency = 0
+local function align(i,v)
+local att0 = Instance.new("Attachment", i)
+att0.Position = Vector3.new(0,0,0)
+local att1 = Instance.new("Attachment", v)
+att1.Position = Vector3.new(0,0,0)
+local AP = Instance.new("AlignPosition", i)
+AP.Attachment0 = att0
+AP.Attachment1 = att1
+AP.RigidityEnabled = false
+AP.ReactionForceEnabled = false
+AP.ApplyAtCenterOfMass = true
+AP.MaxForce = 9999999
+AP.MaxVelocity = math.huge
+AP.Responsiveness = 64
+local AO = Instance.new("AlignOrientation", i)
+AO.Attachment0 = att0
+AO.Attachment1 = att1
+AO.ReactionTorqueEnabled = true
+AO.PrimaryAxisOnly = false
+AO.MaxTorque = 9999999
+AO.MaxAngularVelocity = math.huge
+AO.Responsiveness = 50
+end
+align(Hats.gun.Handle, Character["Torso"])
+
+Hats.gun.Handle.Attachment.Orientation = Vector3.new(90,0,0)
+
+Character:WaitForChild("Torso").Attachment.Position = Vector3.new(0,-1.5,-1.5)
+
+game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(KeyPressed)
+ if KeyPressed == "r" then
+     if toggle == false then
+         local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://"
+local k = Plr.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+         
+         Hats.gun.Handle.Attachment.Orientation = Vector3.new(90,0,0)
+
+Character:WaitForChild("Torso").Attachment.Position = Vector3.new(0,-1.5,-1.5)
+
+        toggle = true
+        
+        else
+            local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://"
+local k = Plr.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+Hats.gun.Handle.Attachment.Orientation = Vector3.new(90,0,0)
+
+Character:WaitForChild("Torso").Attachment.Position = Vector3.new(0,-1.5,-1.5)
+            toggle = false
+     end
+end
+end)
+
+
+game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(KeyPressed)
+ if KeyPressed == "r" then
+     if toggle == false then
+         wait()
+         local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://"
+local k = Plr.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+
+         
+         Hats.gun.Handle.Attachment.Orientation = Vector3.new(90,0,0)
+
+Character:WaitForChild("Torso").Attachment.Position = Vector3.new(0,-1.5,-2)
+
+        toggle = true
+        
+        else
+            
+            wait()
+            local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://7"
+local r = Plr.Character.Humanoid:LoadAnimation(Anim)
+r:Play()
+
+
+
+Hats.gun.Handle.Attachment.Orientation = Vector3.new(90,0,0)
+
+Character:WaitForChild("Torso").Attachment.Position = Vector3.new(0,-1.5,-1.5)
+            toggle = false
+     end
+end
+end)
+
+
+
+
+
+game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(KeyPressed)
+ if KeyPressed == "f" then
+     if toggle == true then
+         toggle = false
+          for index, part in pairs(workspace:GetDescendants()) do
+    if part:IsA("BasePart") and part.Anchored == false and part:IsDescendantOf(Player.Character) == false and part.Parent.Name == "RockAccessory" then
+        table.insert(unanchoredparts, part)
+        part.Massless = true
+        part.CanCollide = false
+        part.Transparency = 0
+        if part:FindFirstChildOfClass("BodyPosition") ~= nil then
+            part:FindFirstChildOfClass("BodyPosition"):Destroy()
+        end
+    end
+end
+for index, part in pairs(unanchoredparts) do
+    local mover = Instance.new("BodyPosition", part)
+    table.insert(movers, mover)
+    mover.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    local temp1 = Instance.new("BodyThrust", part)
+    temp1.Location = Vector3.new(4,0,0)
+    temp1.Force = Vector3.new(0,40,40)
+    end
+        
+for index, mover in pairs(movers) do
+        mover.Position = Player.Character:FindFirstChild("HumanoidRootPart").CFrame:PointToWorldSpace(Vector3.new(0, 2, 0))
+    end
+    wait(1)
+
+         for index, mover in pairs(movers) do
+        mover.Position = Player.Character:FindFirstChild("HumanoidRootPart").CFrame:PointToWorldSpace(Vector3.new(0, 0, -100))
+        
+         end
+    
+        wait(0.25)
+        
+          for index, mover in pairs(movers) do
+        mover.Position = Player.Character:FindFirstChild("HumanoidRootPart").CFrame:PointToWorldSpace(Vector3.new(0, -30, 0))
+        
+          end
+	
+	 wait(0.5)
+	 toggle = true
+        end
+    end
+end)
+
