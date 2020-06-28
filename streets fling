@@ -1,0 +1,99 @@
+local Players=game:GetService("Players")
+local RunService=game:GetService("RunService")
+local ContextActionService=game:GetService("ContextActionService")
+local RunService=game:GetService("RunService")
+local Player=Players.LocalPlayer
+local tracking={}
+local enabled=false;
+repeat wait() until Player.Character
+
+function newObject(class,Extra) --extra args
+	local object = Instance.new(class)
+	for idx,ti in next,Extra do
+		object[idx]=ti
+	end
+	return object
+end
+
+local clientPart=newObject("Part",{
+    Anchored=true,
+	CanCollide=false,
+    Transparency=1,
+    Parent=workspace
+})
+
+RunService.RenderStepped:connect(function()
+	if Player.Character and enabled then
+		clientPart.CFrame=Player.Character.Head.CFrame
+	end
+end)
+
+for idx,obj in next,workspace:GetDescendants() do
+	if not Players:FindFirstChild(tostring(obj.Parent)) then
+	if obj:IsA("Part") and not obj.Parent:IsA("Tool") and tostring(obj)~="Bone" and tostring(obj)~="Head" and not obj.Parent:IsA("Accessory") and not obj.Parent:FindFirstChild("Humanoid") then
+		if not obj.Anchored and not obj:FindFirstChild("BodyPosition") then
+			--if obj.Parent.Name=="Gabage" then
+				table.insert(tracking,obj)
+			--end
+		end
+	end
+	end
+end
+
+
+ContextActionService:BindAction("toggle", function(a,b,c)
+	if b==Enum.UserInputState.Begin then
+		enabled=not enabled
+		print(string.format("state: %s",tostring(enabled)))
+		if not enabled then
+			for i,v in next,tracking do
+				if v:FindFirstChildWhichIsA("RocketPropulsion") then
+					v:FindFirstChildWhichIsA("RocketPropulsion"):Destroy()
+				end
+			end
+		end
+		if enabled then
+			for index,player in next,Players:GetPlayers() do
+				if player.Character then
+					for Index,Obj in next,Player.Character:GetDescendants() do
+						if Obj:IsA("BasePart") then
+							Obj.CanCollide=false
+							Obj.Massless=true
+							for i,v in next,tracking do 
+								if v==Obj then 
+									tracking[i]=nil 
+								end
+							end
+						end
+					end
+				end
+			end
+			for idx,part in next,tracking do 
+				warn(string.format("Tracking: %s",tostring(part:GetFullName())))
+				if part:FindFirstChildWhichIsA("RocketPropulsion") then
+					part:FindFirstChildWhichIsA("RocketPropulsion"):Destroy()
+				end
+				
+				part.Massless=true
+				part.CanCollide=false
+				part.Transparency=0.5
+				
+				newObject("RocketPropulsion",{
+					Parent=part,
+					Target=clientPart,
+					MaxSpeed=30000,
+					MaxThrust=2000000,
+					CartoonFactor=9e9,
+				}):Fire()
+			end
+		end
+    end
+end, false, Enum.KeyCode.F)
+
+
+RunService.RenderStepped:connect(function()
+	if enabled then
+		Player.MaximumSimulationRadius = 9e9
+		Player.SimulationRadius = 9e9
+	end
+end)
